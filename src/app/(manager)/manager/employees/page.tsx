@@ -1,0 +1,1 @@
+import{PageHeading}from"@/components/ui/page-heading";import{EmployeeRoster}from"@/components/manager/employee-roster";import{employees}from"@/lib/mock-data";export default function EmployeesPage(){return <><PageHeading eyebrow="Team" title="Employees" description="Manage account profiles, roles, and scheduling classifications."/><EmployeeRoster initial={employees}/></>}

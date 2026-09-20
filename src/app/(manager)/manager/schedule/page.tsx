@@ -1,0 +1,1 @@
+import{PageHeading}from"@/components/ui/page-heading";import{ScheduleBuilder}from"@/components/manager/schedule-builder";export default function SchedulePage(){return <><PageHeading eyebrow="Weekly planner" title="September 28 – October 4" description="Assign shifts, resolve availability conflicts, then publish the final schedule."/><ScheduleBuilder/></>}

@@ -1,16 +1,19 @@
 "use client";
 import { useState } from "react";
-import type { Employee } from "@/types";
+import type { AccountRole, Employee } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Plus } from "@/components/ui/icons";
-import { createEmployeeAccount } from "@/app/actions/employees";
+import { createTeamAccount } from "@/app/actions/employees";
+import { AccountActions } from "@/components/manager/account-actions";
 export function EmployeeRoster({ initial }: { initial: Employee[] }) {
   const [people, setPeople] = useState(initial);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [notice, setNotice] = useState("");
+  const [error, setError] = useState("");
+  const [accountRole, setAccountRole] = useState<AccountRole>("employee");
   const filtered = people.filter((p) =>
-    p.name.toLowerCase().includes(query.toLowerCase()),
+    p.name.toLowerCase().includes(query.toLowerCase()) || p.username?.toLowerCase().includes(query.toLowerCase()),
   );
   async function add(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -18,19 +21,22 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
     const person: Employee = {
       id: crypto.randomUUID(),
       name: String(f.get("name")),
-      email: String(f.get("email")),
+      username: String(f.get("username")),
+      email: "",
       phone: "",
-      role: "employee",
+      role: accountRole,
       classification: String(
         f.get("classification"),
       ) as Employee["classification"],
-      position: String(f.get("position")),
+      position: accountRole === "manager" ? "Restaurant Manager" : String(f.get("position")),
       active: true,
     };
-    await createEmployeeAccount(f);
+    const result = await createTeamAccount(f);
+    if (!result.ok) { setError(result.error ?? "Account could not be created."); return; }
     setPeople([...people, person]);
     setOpen(false);
-    setNotice("Employee account created.");
+    setError("");
+    setNotice(`${accountRole === "manager" ? "Manager" : "Crew"} account created.`);
   }
   return (
     <>
@@ -45,7 +51,7 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
       <div className="mb-5 flex flex-col gap-3 sm:flex-row">
         <input
           className="field sm:max-w-sm"
-          placeholder="Search employees"
+          placeholder="Search team accounts"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -54,7 +60,7 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
           onClick={() => setOpen(!open)}
         >
           <Plus className="size-4" />
-          Add employee
+          Add account
         </button>
       </div>
       {open && (
@@ -68,11 +74,18 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
             placeholder="Full name"
             required
           />
+          <select className="field" name="role" value={accountRole} onChange={(event) => setAccountRole(event.target.value as AccountRole)}>
+            <option value="employee">Crew</option>
+            <option value="manager">Manager</option>
+          </select>
           <input
             className="field"
-            name="email"
-            type="email"
-            placeholder="Email"
+            name="username"
+            autoComplete="off"
+            placeholder="Username"
+            minLength={3}
+            maxLength={30}
+            pattern="[A-Za-z0-9._-]+"
             required
           />
           <input
@@ -83,16 +96,17 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
             minLength={8}
             required
           />
-          <input
+          {accountRole === "employee" && <input
             className="field"
             name="position"
             placeholder="Position"
             required
-          />
-          <select className="field" name="classification">
+          />}
+          {accountRole === "employee" && <select className="field" name="classification">
             <option>FreeSched</option>
             <option>Working Student</option>
-          </select>
+          </select>}
+          {error && <p role="alert" className="rounded-xl bg-[var(--danger-soft)] p-3 text-sm font-semibold text-[var(--danger)] md:col-span-4">{error}</p>}
           <button className="button button-primary md:col-span-4 md:w-fit">
             Create profile
           </button>
@@ -102,11 +116,13 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
         <table className="w-full min-w-[700px] text-left">
           <thead className="bg-[var(--surface)] text-xs uppercase tracking-wide text-[var(--muted)]">
             <tr>
-              <th className="p-4">Employee</th>
+              <th className="p-4">Account</th>
+              <th className="p-4">Role</th>
               <th className="p-4">Position</th>
               <th className="p-4">Classification</th>
               <th className="p-4">Preference</th>
               <th className="p-4">Status</th>
+              <th className="p-4">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--line)]">
@@ -122,13 +138,14 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
                     </span>
                     <div>
                       <p className="text-sm font-bold">{p.name}</p>
-                      <p className="text-xs text-[var(--muted)]">{p.email}</p>
+                      <p className="text-xs text-[var(--muted)]">@{p.username ?? "username not set"}</p>
                     </div>
                   </div>
                 </td>
+                <td className="p-4"><Badge tone={p.role === "manager" ? "brand" : "neutral"}>{p.role === "employee" ? "crew" : "manager"}</Badge></td>
                 <td className="p-4 text-sm">{p.position}</td>
                 <td className="p-4">
-                  <Badge
+                  {p.role === "employee" ? <Badge
                     tone={
                       p.classification === "Working Student"
                         ? "brand"
@@ -136,14 +153,15 @@ export function EmployeeRoster({ initial }: { initial: Employee[] }) {
                     }
                   >
                     {p.classification}
-                  </Badge>
+                  </Badge> : <span className="text-sm text-[var(--muted)]">—</span>}
                 </td>
                 <td className="p-4 text-sm text-[var(--muted)]">
-                  {p.preferredPeriod ?? "Flexible"}
+                  {p.role === "employee" ? p.preferredPeriod ?? "Flexible" : "—"}
                 </td>
                 <td className="p-4">
-                  <Badge tone="success">Active</Badge>
+                  <Badge tone={p.active ? "success" : "neutral"}>{p.active ? "Active" : "Inactive"}</Badge>
                 </td>
+                <td className="p-4"><AccountActions person={p} /></td>
               </tr>
             ))}
           </tbody>

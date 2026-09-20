@@ -1,7 +1,7 @@
 export type ScheduleEntry = { employeeId: string; date: string; value: string };
 export type AvailabilityBlock = { employeeId: string; weekday: number; start: string; end: string; label: string };
 export type ApprovedRestDay = { employeeId: string; date: string };
-export type ScheduleConflict = { employeeId: string; date: string; kind: "class" | "rest-day" | "invalid"; message: string };
+export type ScheduleConflict = { employeeId: string; date: string; kind: "class" | "rest-day" | "invalid" | "staffing"; message: string };
 
 const TIME_PATTERN = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 
@@ -19,7 +19,7 @@ function nextWeekday(day: number) {
   return day === 7 ? 1 : day + 1;
 }
 
-export function validateSchedule(entries: ScheduleEntry[], classes: AvailabilityBlock[], restDays: ApprovedRestDay[]) {
+export function validateSchedule(entries: ScheduleEntry[], classes: AvailabilityBlock[], restDays: ApprovedRestDay[], minimumDailyCrew = 0) {
   const conflicts: ScheduleConflict[] = [];
   for (const entry of entries) {
     if (entry.value === "Rest") continue;
@@ -50,6 +50,16 @@ export function validateSchedule(entries: ScheduleEntry[], classes: Availability
       if (overlaps(start, end, classStart + dayOffset, normalizedClassEnd + dayOffset)) {
         conflicts.push({ employeeId: entry.employeeId, date: entry.date, kind: "class", message: `Shift overlaps ${block.label}.` });
       }
+    }
+  }
+  const dates = [...new Set(entries.map((entry) => entry.date))];
+  for (const date of dates) {
+    const working = entries.filter((entry) => entry.date === date && entry.value !== "Rest").length;
+    if (working < minimumDailyCrew) conflicts.push({ employeeId: "staffing", date, kind: "staffing", message: `At least ${minimumDailyCrew} crew members must be scheduled.` });
+  }
+  for (const employeeId of [...new Set(entries.map((entry) => entry.employeeId))]) {
+    if (!entries.some((entry) => entry.employeeId === employeeId && entry.value === "Rest")) {
+      conflicts.push({ employeeId, date: dates[0] ?? "", kind: "staffing", message: "Employee needs at least 1 rest day this week." });
     }
   }
   return conflicts;

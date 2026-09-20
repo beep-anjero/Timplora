@@ -5,11 +5,11 @@ single restaurant. It will give employees one place to manage availability and
 rest day requests while keeping schedule approval and publication under manager
 control.
 
-This repository contains the implemented application through Phase 9. It includes
+This repository contains the implemented application through Phase 10. It includes
 responsive employee and manager workspaces, Neon Auth and PostgreSQL RLS,
 persistent availability and rest-day workflows, weekly schedule publishing and
-revision history, conflict validation, and in-app notifications. Deployment and
-the broader Phase 10 test pass have intentionally not begun.
+revision history, conflict validation, in-app notifications, automated business-rule
+tests, and production security headers.
 
 ## Technology stack
 
@@ -51,7 +51,9 @@ Quality checks:
 
 ```bash
 npm run lint
+npm test
 npm run build
+npm audit --audit-level=high
 ```
 
 Never commit `.env.local` or credentials. `.env.example` contains names and safe
@@ -90,7 +92,7 @@ src/
 7. ✅ Rest day request system
 8. ✅ Weekly scheduling
 9. ✅ Validation and notifications
-10. ⏸ Testing and deployment (not started)
+10. 🚧 Testing and deployment (deployment authorization pending)
 
 Each phase begins only after explicit approval. Automated schedule generation is
 outside the MVP.

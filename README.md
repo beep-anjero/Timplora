@@ -5,9 +5,11 @@ single restaurant. It will give employees one place to manage availability and
 rest day requests while keeping schedule approval and publication under manager
 control.
 
-This repository currently contains the Phase 1 project foundation only. Product
-screens, authentication, persistence, and scheduling behavior are intentionally
-reserved for later approved phases.
+This repository contains the implemented application through Phase 9. It includes
+responsive employee and manager workspaces, Supabase authentication and RLS,
+persistent availability and rest-day workflows, weekly schedule publishing and
+revision history, conflict validation, and in-app notifications. Deployment and
+the broader Phase 10 test pass have intentionally not begun.
 
 ## Technology stack
 
@@ -55,6 +57,11 @@ npm run build
 Never commit `.env.local` or credentials. `.env.example` contains names and safe
 placeholder values only.
 
+For a connected Supabase project, copy the values from `.env.example`, apply the
+SQL files in `supabase/migrations` in filename order, and promote the first manager
+profile by setting its `role` to `manager` in the Supabase dashboard. Without
+Supabase variables the application runs in a safe, fictional-data demo mode.
+
 ## Project structure
 
 ```text
@@ -73,16 +80,16 @@ src/
 
 ## Development roadmap
 
-1. Project setup
-2. UI/UX foundation
-3. Employee screens with mock data
-4. Manager screens with mock data
-5. Database and authentication
-6. Employee and availability management
-7. Rest day request system
-8. Weekly scheduling
-9. Validation and notifications
-10. Testing and deployment
+1. ✅ Project setup
+2. ✅ UI/UX foundation
+3. ✅ Employee screens with mock data
+4. ✅ Manager screens with mock data
+5. ✅ Database and authentication
+6. ✅ Employee and availability management
+7. ✅ Rest day request system
+8. ✅ Weekly scheduling
+9. ✅ Validation and notifications
+10. ⏸ Testing and deployment (not started)
 
 Each phase begins only after explicit approval. Automated schedule generation is
 outside the MVP.

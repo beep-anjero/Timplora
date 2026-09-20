@@ -1,0 +1,1 @@
+import{PageHeading}from"@/components/ui/page-heading";import{AvailabilityForm}from"@/components/employee/availability-form";export default function AvailabilityPage(){return <><PageHeading eyebrow="Working student" title="Availability" description="Keep your class schedule and shift preference current so conflicts can be caught before publishing."/><AvailabilityForm/></>}

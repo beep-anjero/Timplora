@@ -1,0 +1,14 @@
+import type { ClassMeeting,Employee,RestDayRequest,Shift } from "@/types";
+export const employees:Employee[]=[
+{id:"emp-1",name:"Maria Santos",email:"maria.santos@example.com",phone:"+63 917 555 0134",role:"employee",classification:"FreeSched",position:"Service Crew",active:true},
+{id:"emp-2",name:"Paolo Reyes",email:"paolo.reyes@example.com",phone:"+63 917 555 0188",role:"employee",classification:"Working Student",preferredPeriod:"Evening",position:"Cashier",active:true},
+{id:"emp-3",name:"Lea Cruz",email:"lea.cruz@example.com",phone:"+63 917 555 0172",role:"employee",classification:"Working Student",preferredPeriod:"Afternoon",position:"Service Crew",active:true},
+{id:"emp-4",name:"Nico Flores",email:"nico.flores@example.com",phone:"+63 917 555 0199",role:"employee",classification:"FreeSched",position:"Kitchen Crew",active:true},
+{id:"emp-5",name:"Aira Mendoza",email:"aira.mendoza@example.com",phone:"+63 917 555 0118",role:"employee",classification:"FreeSched",position:"Kitchen Crew",active:true},
+];
+export const shifts:Shift[]=[
+{id:"s1",employeeId:"emp-1",start:"2026-09-21T08:00:00+08:00",end:"2026-09-21T17:00:00+08:00",label:"Opening",status:"published"},{id:"s2",employeeId:"emp-1",start:"2026-09-22T12:00:00+08:00",end:"2026-09-22T21:00:00+08:00",label:"Mid",status:"published"},{id:"s3",employeeId:"emp-1",start:"2026-09-24T16:00:00+08:00",end:"2026-09-25T01:00:00+08:00",label:"Closing",status:"published"},{id:"s4",employeeId:"emp-1",start:"2026-09-25T08:00:00+08:00",end:"2026-09-25T17:00:00+08:00",label:"Opening",status:"published"},{id:"s5",employeeId:"emp-1",start:"2026-09-27T10:00:00+08:00",end:"2026-09-27T19:00:00+08:00",label:"Day",status:"published"},
+];
+export const requests:RestDayRequest[]=[{id:"r1",employeeId:"emp-1",date:"2026-09-26",reason:"Family commitment",status:"approved",submittedAt:"2026-09-14T08:32:00+08:00"},{id:"r2",employeeId:"emp-1",date:"2026-10-02",reason:"Medical appointment",status:"pending",submittedAt:"2026-09-19T14:12:00+08:00"},{id:"r3",employeeId:"emp-2",date:"2026-09-25",reason:"University examination",status:"pending",submittedAt:"2026-09-18T09:10:00+08:00"},{id:"r4",employeeId:"emp-3",date:"2026-09-25",reason:"School activity",status:"pending",submittedAt:"2026-09-18T11:45:00+08:00"}];
+export const classes:ClassMeeting[]=[{id:"c1",employeeId:"emp-2",day:1,subject:"Accounting",start:"09:00",end:"12:00"},{id:"c2",employeeId:"emp-2",day:3,subject:"Business Law",start:"10:00",end:"13:00"},{id:"c3",employeeId:"emp-2",day:5,subject:"Economics",start:"08:00",end:"11:00"}];
+export const weekDays=[{day:"Mon",date:"21"},{day:"Tue",date:"22"},{day:"Wed",date:"23"},{day:"Thu",date:"24"},{day:"Fri",date:"25"},{day:"Sat",date:"26"},{day:"Sun",date:"27"}];

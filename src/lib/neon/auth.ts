@@ -1,0 +1,1 @@
+import{createNeonAuth}from"@neondatabase/auth/next/server";import{hasNeonAuth}from"./config";let instance:ReturnType<typeof createNeonAuth>|undefined;export function getAuth(){if(!hasNeonAuth())throw new Error("Neon Auth is not configured.");return instance??=createNeonAuth({baseUrl:process.env.NEON_AUTH_BASE_URL!,cookies:{secret:process.env.NEON_AUTH_COOKIE_SECRET!}})}

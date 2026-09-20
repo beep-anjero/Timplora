@@ -6,7 +6,7 @@ rest day requests while keeping schedule approval and publication under manager
 control.
 
 This repository contains the implemented application through Phase 9. It includes
-responsive employee and manager workspaces, Supabase authentication and RLS,
+responsive employee and manager workspaces, Neon Auth and PostgreSQL RLS,
 persistent availability and rest-day workflows, weekly schedule publishing and
 revision history, conflict validation, and in-app notifications. Deployment and
 the broader Phase 10 test pass have intentionally not begun.
@@ -17,8 +17,8 @@ the broader Phase 10 test pass have intentionally not begun.
 - TypeScript
 - Tailwind CSS
 - ESLint
-- Supabase Authentication and PostgreSQL (planned)
-- Supabase Row Level Security (planned)
+- Neon Auth
+- Neon serverless PostgreSQL and Row Level Security
 - Vercel deployment (planned)
 
 ## Local setup
@@ -57,10 +57,11 @@ npm run build
 Never commit `.env.local` or credentials. `.env.example` contains names and safe
 placeholder values only.
 
-For a connected Supabase project, copy the values from `.env.example`, apply the
-SQL files in `supabase/migrations` in filename order, and promote the first manager
-profile by setting its `role` to `manager` in the Supabase dashboard. Without
-Supabase variables the application runs in a safe, fictional-data demo mode.
+For a connected Neon project, enable Neon Auth and the Data API, copy the values
+from `.env.example`, then apply the SQL files in `neon/migrations` in filename
+order. Open `/setup` once to create the first manager account; that route locks
+after the first profile exists. Without Neon variables the application runs in
+a safe, fictional-data demo mode.
 
 ## Project structure
 

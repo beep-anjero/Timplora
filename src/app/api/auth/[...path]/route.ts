@@ -1,0 +1,1 @@
+import{hasNeonAuth}from"@/lib/neon/config";import{getAuth}from"@/lib/neon/auth";const unavailable=()=>Response.json({error:"Neon Auth is not configured."},{status:503});const handlers=hasNeonAuth()?getAuth().handler():{GET:unavailable,POST:unavailable,PUT:unavailable,DELETE:unavailable,PATCH:unavailable};export const{GET,POST,PUT,DELETE,PATCH}=handlers;

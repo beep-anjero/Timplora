@@ -1,3 +1,154 @@
 "use client";
-import{useState}from"react";import type{Employee}from"@/types";import{Badge}from"@/components/ui/badge";import{Plus}from"@/components/ui/icons";import{createEmployeeAccount}from"@/app/actions/employees";
-export function EmployeeRoster({initial}:{initial:Employee[]}){const[people,setPeople]=useState(initial);const[query,setQuery]=useState("");const[open,setOpen]=useState(false);const[notice,setNotice]=useState("");const filtered=people.filter(p=>p.name.toLowerCase().includes(query.toLowerCase()));async function add(e:React.FormEvent<HTMLFormElement>){e.preventDefault();const f=new FormData(e.currentTarget);const person:Employee={id:crypto.randomUUID(),name:String(f.get("name")),email:String(f.get("email")),phone:"",role:"employee",classification:String(f.get("classification"))as Employee["classification"],position:String(f.get("position")),active:true};await createEmployeeAccount(f);setPeople([...people,person]);setOpen(false);setNotice("Employee account created.")}return <>{notice&&<div role="status" className="mb-4 rounded-xl bg-[var(--success-soft)] px-4 py-3 text-sm font-semibold text-[var(--success)]">{notice}</div>}<div className="mb-5 flex flex-col gap-3 sm:flex-row"><input className="field sm:max-w-sm" placeholder="Search employees" value={query} onChange={e=>setQuery(e.target.value)}/><button className="button button-primary sm:ml-auto" onClick={()=>setOpen(!open)}><Plus className="size-4"/>Add employee</button></div>{open&&<form onSubmit={add} className="panel mb-5 grid gap-3 p-5 md:grid-cols-4"><input className="field" name="name" placeholder="Full name" required/><input className="field" name="email" type="email" placeholder="Email" required/><input className="field" name="position" placeholder="Position" required/><select className="field" name="classification"><option>FreeSched</option><option>Working Student</option></select><button className="button button-primary md:col-span-4 md:w-fit">Create profile</button></form>}<div className="panel overflow-x-auto"><table className="w-full min-w-[700px] text-left"><thead className="bg-[var(--surface)] text-xs uppercase tracking-wide text-[var(--muted)]"><tr><th className="p-4">Employee</th><th className="p-4">Position</th><th className="p-4">Classification</th><th className="p-4">Preference</th><th className="p-4">Status</th></tr></thead><tbody className="divide-y divide-[var(--line)]">{filtered.map((p,i)=><tr key={p.id}><td className="p-4"><div className="flex items-center gap-3"><span className={`avatar avatar-${i%3+1}`}>{p.name.split(" ").map(v=>v[0]).join("")}</span><div><p className="text-sm font-bold">{p.name}</p><p className="text-xs text-[var(--muted)]">{p.email}</p></div></div></td><td className="p-4 text-sm">{p.position}</td><td className="p-4"><Badge tone={p.classification==="Working Student"?"brand":"neutral"}>{p.classification}</Badge></td><td className="p-4 text-sm text-[var(--muted)]">{p.preferredPeriod??"Flexible"}</td><td className="p-4"><Badge tone="success">Active</Badge></td></tr>)}</tbody></table></div></>}
+import { useState } from "react";
+import type { Employee } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Plus } from "@/components/ui/icons";
+import { createEmployeeAccount } from "@/app/actions/employees";
+export function EmployeeRoster({ initial }: { initial: Employee[] }) {
+  const [people, setPeople] = useState(initial);
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [notice, setNotice] = useState("");
+  const filtered = people.filter((p) =>
+    p.name.toLowerCase().includes(query.toLowerCase()),
+  );
+  async function add(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const person: Employee = {
+      id: crypto.randomUUID(),
+      name: String(f.get("name")),
+      email: String(f.get("email")),
+      phone: "",
+      role: "employee",
+      classification: String(
+        f.get("classification"),
+      ) as Employee["classification"],
+      position: String(f.get("position")),
+      active: true,
+    };
+    await createEmployeeAccount(f);
+    setPeople([...people, person]);
+    setOpen(false);
+    setNotice("Employee account created.");
+  }
+  return (
+    <>
+      {notice && (
+        <div
+          role="status"
+          className="mb-4 rounded-xl bg-[var(--success-soft)] px-4 py-3 text-sm font-semibold text-[var(--success)]"
+        >
+          {notice}
+        </div>
+      )}
+      <div className="mb-5 flex flex-col gap-3 sm:flex-row">
+        <input
+          className="field sm:max-w-sm"
+          placeholder="Search employees"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button
+          className="button button-primary sm:ml-auto"
+          onClick={() => setOpen(!open)}
+        >
+          <Plus className="size-4" />
+          Add employee
+        </button>
+      </div>
+      {open && (
+        <form
+          onSubmit={add}
+          className="panel mb-5 grid gap-3 p-5 md:grid-cols-4"
+        >
+          <input
+            className="field"
+            name="name"
+            placeholder="Full name"
+            required
+          />
+          <input
+            className="field"
+            name="email"
+            type="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            className="field"
+            name="password"
+            type="password"
+            placeholder="Temporary password"
+            minLength={8}
+            required
+          />
+          <input
+            className="field"
+            name="position"
+            placeholder="Position"
+            required
+          />
+          <select className="field" name="classification">
+            <option>FreeSched</option>
+            <option>Working Student</option>
+          </select>
+          <button className="button button-primary md:col-span-4 md:w-fit">
+            Create profile
+          </button>
+        </form>
+      )}
+      <div className="panel overflow-x-auto">
+        <table className="w-full min-w-[700px] text-left">
+          <thead className="bg-[var(--surface)] text-xs uppercase tracking-wide text-[var(--muted)]">
+            <tr>
+              <th className="p-4">Employee</th>
+              <th className="p-4">Position</th>
+              <th className="p-4">Classification</th>
+              <th className="p-4">Preference</th>
+              <th className="p-4">Status</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[var(--line)]">
+            {filtered.map((p, i) => (
+              <tr key={p.id}>
+                <td className="p-4">
+                  <div className="flex items-center gap-3">
+                    <span className={`avatar avatar-${(i % 3) + 1}`}>
+                      {p.name
+                        .split(" ")
+                        .map((v) => v[0])
+                        .join("")}
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold">{p.name}</p>
+                      <p className="text-xs text-[var(--muted)]">{p.email}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="p-4 text-sm">{p.position}</td>
+                <td className="p-4">
+                  <Badge
+                    tone={
+                      p.classification === "Working Student"
+                        ? "brand"
+                        : "neutral"
+                    }
+                  >
+                    {p.classification}
+                  </Badge>
+                </td>
+                <td className="p-4 text-sm text-[var(--muted)]">
+                  {p.preferredPeriod ?? "Flexible"}
+                </td>
+                <td className="p-4">
+                  <Badge tone="success">Active</Badge>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}

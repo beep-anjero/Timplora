@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Timplora
 
-## Getting Started
+Timplora is a responsive employee scheduling and rest day management system for a
+single restaurant. It will give employees one place to manage availability and
+rest day requests while keeping schedule approval and publication under manager
+control.
 
-First, run the development server:
+This repository currently contains the Phase 1 project foundation only. Product
+screens, authentication, persistence, and scheduling behavior are intentionally
+reserved for later approved phases.
+
+## Technology stack
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- ESLint
+- Supabase Authentication and PostgreSQL (planned)
+- Supabase Row Level Security (planned)
+- Vercel deployment (planned)
+
+## Local setup
+
+Requirements:
+
+- Node.js 20.9 or newer
+- npm
+
+Install dependencies and create your local environment file:
+
+```bash
+npm install
+cp .env.example .env.local
+```
+
+On PowerShell, copy the environment file with:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Start the development server and open <http://localhost:3000>:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Quality checks:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Never commit `.env.local` or credentials. `.env.example` contains names and safe
+placeholder values only.
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+src/
+├── app/                  # App Router routes and layouts
+│   ├── (employee)/       # Employee route group (future phases)
+│   └── (manager)/        # Manager route group (future phases)
+├── components/
+│   ├── employee/         # Employee-specific components
+│   ├── manager/          # Manager-specific components
+│   └── ui/               # Shared UI primitives
+├── hooks/                # Reusable React hooks
+├── lib/                  # Utilities and service clients
+└── types/                # Shared TypeScript definitions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Project setup
+2. UI/UX foundation
+3. Employee screens with mock data
+4. Manager screens with mock data
+5. Database and authentication
+6. Employee and availability management
+7. Rest day request system
+8. Weekly scheduling
+9. Validation and notifications
+10. Testing and deployment
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Each phase begins only after explicit approval. Automated schedule generation is
+outside the MVP.
